@@ -45,7 +45,12 @@ for root, dirs, files in os.walk(input_path):
     for file in files:
         file_path = os.path.join(root, file)
         file_paths.append(file_path)
-
+      
+# User Input
+delete_files_user_input = input("Would you like the original images to be deleted after their background is removed? (Y/N): ")
+while delete_files_user_input.upper() not in ['Y', 'N']:
+    print("Invalid input. Please enter Y or N.")
+    delete_files_user_input = input("Please enter your choice (Y/N): ")        
         
 # driver options and arugments
 prefs = {'download.default_directory' : output_path}
@@ -177,7 +182,10 @@ for x in file_paths:
 
     # when image is downloaded, go back to previous page (upload page) and start loop over
     print("Image #" + str(counter) + f" of {len(file_paths)}" + " successfully downloaded!")
+    if delete_files_user_input == 'Y':
+        os.remove(x)
     driver.back()
+driver.close()
 
 
 
