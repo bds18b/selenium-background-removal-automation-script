@@ -184,7 +184,7 @@ for x in file_paths:
 
     # when image is downloaded, go back to previous page (upload page) and start loop over
     print("Image #" + str(counter) + f" of {len(file_paths)}" + " successfully downloaded!")
-    if delete_files_user_input == 'Y':
+    if delete_files_user_input.upper() == 'Y':
         os.remove(x)
     driver.back()
 driver.quit()
