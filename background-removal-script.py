@@ -10,37 +10,64 @@ import os
 import time
 
 
+
 # Selenium Python Script that is used to automate background removal using Adobe's background removal tool.
 # This is a free tool, so you can only do one image at a time, but this script automates the process so you don't have to.
 
-# -----EXPECTED CRASHES-----
-# 1. Script will crash if when logging in you are prompted to setup 2FA or backup email.
-#    all you need to do is click no and restart the script.
-#    these 2 cases typically occur consecutively and it is random.
-# 2. After around 5 runs, Adobe will lock your account for around 1 hour (if the runs are within a close time period). 
-#    This is because Adobe counts these as failed login attempts for some reason. 
-#    You will get an error that says "Your account has been locked due to multiple failed login attempts."
-
-# First the script will login to your adobe account, then it will be able to remove the bg from all the images
-# within a folder called 'images' within the same directory as the script. The new images with no backgrounds
-# will be saved in a new (or existing) folder called 'images-with-no-bg'.
-
-# All that is needed is an Adobe account, and that you create a forwarding filter on your email so that
-# the adobe verification codes are sent to a tmail inbox. The script accesses the most recent email in the
-# tmail inbox and grabs the code in order to login to the Adobe account.
-
-
+# Make sure to follow the instructions within the README for the script to work properly!
 
 # account information and variables 
-adobe_email = 'your-adobe-email'                                                 # your adobe email                             
-adobe_password = 'your-adobe-password'                                           # your adobe password
-inbox_link = 'your-tmail-link'                                                   # must be a tmail inbox (https://tmail.link/) - proper instructions in the README
-output_path = os.path.join(os.getcwd(), 'images-with-no-bg')                     # output folder path
-input_path = os.path.join(os.getcwd(), 'images')                                 # input folder path
+adobe_email = 'your adobe email '                                                   # your adobe email                             
+adobe_password = 'your adobe password'                                              # your adobe password
+inbox_link = 'your tmail inbox link'                                                # must be a tmail inbox (https://tmail.link/)
+output_path = os.path.join(os.getcwd(), 'images-with-no-bg')                        # output folder path
+input_path = os.path.join(os.getcwd(), 'images')                                    # input folder path 
 os.makedirs(input_path, exist_ok=True)
-os.makedirs(output_path, exist_ok=True)                        
+os.makedirs(output_path, exist_ok=True) 
 
 
+# upload & download img function
+def upload_image(driver, x):
+    # Wait for the shadow root wrapper element to be present
+    shadow_root_wrapper = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
+    )
+
+    # Get the shadow root
+    shadow_root = shadow_root_wrapper.shadow_root
+
+    # Wait for the image upload area element to be visible within the shadow root
+    image_upload_area = WebDriverWait(shadow_root, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-upload"))
+    )
+
+    # Get the inner shadow root
+    inner_shadow_root = image_upload_area.shadow_root
+
+    # upload the image
+    upload_button = inner_shadow_root.find_element(By.CSS_SELECTOR, "button")
+    z = inner_shadow_root.find_element(By.CSS_SELECTOR, "#file-input")
+    z.send_keys(x)
+     
+    # access the download button and click it
+    shadow_root_wrapper = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
+    )
+    shadow_root = shadow_root_wrapper.shadow_root
+
+    image_upload_area = WebDriverWait(shadow_root, 15).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-export"))
+    )
+    shadow_root_2 = image_upload_area.shadow_root
+
+    end = WebDriverWait(shadow_root_2, 15).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "div"))
+    )
+    time.sleep(10)
+    x = end.find_elements(By.CSS_SELECTOR, "sp-button")
+    x[1].click()
+
+                      
 # gets the paths of the images and stores in an array from a folder called 'images
 # within the same directory as the script
 file_paths = []
@@ -133,80 +160,16 @@ for x in file_paths:
     
     counter = counter+1
 
-    # Wait for the shadow root wrapper element to be present
-    shadow_root_wrapper = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
-    )
-
-    # Get the shadow root
-    shadow_root = shadow_root_wrapper.shadow_root
-
-    # Wait for the image upload area element to be visible within the shadow root
-    image_upload_area = WebDriverWait(shadow_root, 10).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-upload"))
-    )
-
-    # Get the inner shadow root
-    inner_shadow_root = image_upload_area.shadow_root
-
-    # upload the image
-    upload_button = inner_shadow_root.find_element(By.CSS_SELECTOR, "button")
-    z = inner_shadow_root.find_element(By.CSS_SELECTOR, "#file-input")
-    z.send_keys(x)
-     
-    # access the download button and click it
-    shadow_root_wrapper = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
-    )
-    shadow_root = shadow_root_wrapper.shadow_root
-
-   # TimeoutException
-    try:
-        image_upload_area = WebDriverWait(shadow_root, 15).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-export"))
-    )
-    except:
-        driver.refresh()
-        # Wait for the shadow root wrapper element to be present
-        shadow_root_wrapper = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
-        )
-
-        # Get the shadow root
-        shadow_root = shadow_root_wrapper.shadow_root
-
-        # Wait for the image upload area element to be visible within the shadow root
-        image_upload_area = WebDriverWait(shadow_root, 10).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-upload"))
-        )
-
-        # Get the inner shadow root
-        inner_shadow_root = image_upload_area.shadow_root
-
-        # upload the image
-        upload_button = inner_shadow_root.find_element(By.CSS_SELECTOR, "button")
-        z = inner_shadow_root.find_element(By.CSS_SELECTOR, "#file-input")
-        z.send_keys(x)
-        
-        # access the download button and click it
-        shadow_root_wrapper = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
-        )
-        shadow_root = shadow_root_wrapper.shadow_root
-        image_upload_area = WebDriverWait(shadow_root, 15).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-export"))
-        )
-
-
-    shadow_root_2 = image_upload_area.shadow_root
-
-    end = WebDriverWait(shadow_root_2, 15).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "div"))
-    )
-    time.sleep(10)
-    x = end.find_elements(By.CSS_SELECTOR, "sp-button")
-    x[1].click()
-
+    # call function to upload image, and download it
+    # if image fails to upload, catch the error, reload the page, and try again
+    val = True
+    while val:
+        try:
+            upload_image(driver, x)
+            val = False
+        except: 
+            driver.refresh()
+            pass
 
     # wait for the image to download
     # the code below waits until a new file is created within the output directory
@@ -225,6 +188,7 @@ for x in file_paths:
         os.remove(x)
     driver.back()
 driver.quit()
+
 
 
 
