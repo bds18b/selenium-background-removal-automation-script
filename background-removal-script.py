@@ -4,6 +4,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import os
 import time
 
@@ -30,7 +32,7 @@ import time
 
 
 # account information and variables 
-adobe_email = 'your adobe email'                                                # your adobe email                               
+adobe_email = 'your adobe email'                                                # your adobe email                             
 adobe_password = 'your adobe password'                                          # your adobe password
 inbox_link = 'your tmail inbox link'                                            # must be a tmail inbox (https://tmail.link/)
 output_path = os.path.join(os.getcwd(), 'images-with-no-bg')                    # output folder path
@@ -64,7 +66,7 @@ chrome_options.add_argument("test-type")
 chrome_options.add_experimental_option('prefs', prefs)
 
 # create the driver and open adobe background removal tool page
-driver = webdriver.Chrome('drivers/chromedriver.exe', chrome_options=chrome_options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.get('https://express.adobe.com/tools/remove-background')
 wait_time = 10
 
@@ -223,7 +225,7 @@ for x in file_paths:
         os.remove(x)
     driver.back()
 
-driver.close()
+driver.quit()
 
 
 
