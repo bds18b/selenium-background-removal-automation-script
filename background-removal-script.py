@@ -21,7 +21,7 @@ import time
 #    This is because Adobe counts these as failed login attempts for some reason. 
 #    You will get an error that says "Your account has been locked due to multiple failed login attempts."
 
-# First the script will login to your account, then it will be able to remove the bg from all the images
+# First the script will login to your adobe account, then it will be able to remove the bg from all the images
 # within a folder called 'images' within the same directory as the script. The new images with no backgrounds
 # will be saved in a new (or existing) folder called 'images-with-no-bg'.
 
@@ -32,11 +32,11 @@ import time
 
 
 # account information and variables 
-adobe_email = 'your adobe email'                                                # your adobe email                             
-adobe_password = 'your adobe password'                                          # your adobe password
-inbox_link = 'your tmail inbox link'                                            # must be a tmail inbox (https://tmail.link/)
-output_path = os.path.join(os.getcwd(), 'images-with-no-bg')                    # output folder path
-input_path = os.path.join(os.getcwd(), 'images')                                # input folder path
+adobe_email = 'seleniumbgremover@gmail.com'                                                # your adobe email                             
+adobe_password = 'Cheese1234!'                                                      # your adobe password
+inbox_link = 'https://tmail.link/inbox/denise.TORB383737duhd@tmail.link/'              # must be a tmail inbox (https://tmail.link/)
+output_path = os.path.join(os.getcwd(), 'images-with-no-bg')                        # output folder path
+input_path = os.path.join(os.getcwd(), 'images')                                 # input folder path
 os.makedirs(input_path, exist_ok=True)
 os.makedirs(output_path, exist_ok=True)                        
 
@@ -48,7 +48,7 @@ for root, dirs, files in os.walk(input_path):
     for file in files:
         file_path = os.path.join(root, file)
         file_paths.append(file_path)
-
+print(file_paths)
 
 # User Input
 delete_files_user_input = input("Would you like the original images to be deleted after their background is removed? (Y/N): ")
@@ -224,7 +224,6 @@ for x in file_paths:
     if delete_files_user_input == 'Y':
         os.remove(x)
     driver.back()
-
 driver.quit()
 
 

@@ -7,7 +7,7 @@ A Python script that automates background removal using an online Adobe tool.
 - [Background Removal Automation with Python Selenium](#background-removal-automation-with-python-selenium)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
-  - [Installation](#installation)
+  - [Installation and Instructions](#installation-and-instructions)
   - [Issues / Bugs](#issues--bugs)
 
 ## Introduction
@@ -15,13 +15,29 @@ A Python script that automates background removal using an online Adobe tool.
 This project provides a Python script that utilizes the Selenium library to automate background removal using an online Adobe tool. It simplifies the process of removing backgrounds from images by automating repetitive tasks and saving time. 
 
 
-## Installation
+## Installation and Instructions
+
+Clone the repository
 
 To use this script, you need to have the Selenium library installed. You can install it using pip:
 
 ```bash
-pip install selenium
+pip3 install selenium
 ```
+
+You also need to install the WebDriver-Manager library for the webdriver to function:
+
+```bash
+pip3 install webdriver-manager
+```
+
+In order to run the script, you need to set up some credentials neat the top of the script file. 
+1. adobe_email (your adobe email)                                                                    
+2. adobe_password (your adobe password)                                                      
+3. inbox_link (your tmail link)
+  1. If you don't have a tmail inbox, you can set one up here: https://tmail.link/
+  2. You then need to set up a forwarding protocol from your adobe email that will forward the verification code emails to the tmail inbox. 
+
 
 ## Issues / Bugs
 
