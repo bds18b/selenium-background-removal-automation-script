@@ -30,11 +30,9 @@ import time
 
 
 # account information and variables 
-adobe_email = 'seleniumbgremover@gmail.com'                                     # your adobe email
-adobe_email2 = 'torytexturepacks@gmail.com'     
-adobe_email3 = 'phearpvp@gmail.com'                                 
-adobe_password = 'Cheese1234!'                                                  # your adobe password
-inbox_link = 'https://tmail.link/inbox/denise.TORB383737duhd@tmail.link/'       # must be a tmail inbox (https://tmail.link/)
+adobe_email = 'your adobe email'                                                # your adobe email                               
+adobe_password = 'your adobe password'                                          # your adobe password
+inbox_link = 'your tmail inbox link'                                            # must be a tmail inbox (https://tmail.link/)
 output_path = os.path.join(os.getcwd(), 'images-with-no-bg')                    # output folder path
 input_path = os.path.join(os.getcwd(), 'images')                                # input folder path
 os.makedirs(input_path, exist_ok=True)
