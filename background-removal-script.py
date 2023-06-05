@@ -28,12 +28,15 @@ import time
 # tmail inbox and grabs the code in order to login to the Adobe account.
 
 
+
 # account information and variables 
-adobe_email = 'your-adobe-email@mail.com'                                 # your adobe account email                              
-adobe_password = 'your-adobe-password'                                    # your adobe account password
-inbox_link = 'your-tmail-inbox-link'                                      # must be a tmail inbox (https://tmail.link/)
-output_path = os.path.join(os.getcwd(), 'images-with-no-bg')              # output folder path
-input_path = os.path.join(os.getcwd(), 'images')                          # input folder path
+adobe_email = 'seleniumbgremover@gmail.com'                                     # your adobe email
+adobe_email2 = 'torytexturepacks@gmail.com'     
+adobe_email3 = 'phearpvp@gmail.com'                                 
+adobe_password = 'Cheese1234!'                                                  # your adobe password
+inbox_link = 'https://tmail.link/inbox/denise.TORB383737duhd@tmail.link/'       # must be a tmail inbox (https://tmail.link/)
+output_path = os.path.join(os.getcwd(), 'images-with-no-bg')                    # output folder path
+input_path = os.path.join(os.getcwd(), 'images')                                # input folder path
 os.makedirs(input_path, exist_ok=True)
 os.makedirs(output_path, exist_ok=True)                        
 
@@ -45,16 +48,18 @@ for root, dirs, files in os.walk(input_path):
     for file in files:
         file_path = os.path.join(root, file)
         file_paths.append(file_path)
-      
+
+
 # User Input
 delete_files_user_input = input("Would you like the original images to be deleted after their background is removed? (Y/N): ")
 while delete_files_user_input.upper() not in ['Y', 'N']:
     print("Invalid input. Please enter Y or N.")
-    delete_files_user_input = input("Please enter your choice (Y/N): ")        
-        
+    delete_files_user_input = input("Please enter your choice (Y/N): ")
+
+
 # driver options and arugments
 prefs = {'download.default_directory' : output_path}
-chrome_options = Options()
+chrome_options = Options() 
 chrome_options.add_experimental_option("detach", True)
 chrome_options.add_argument("--disable-popup-blocking")
 chrome_options.add_argument("test-type")
@@ -146,8 +151,8 @@ for x in file_paths:
 
     # upload the image
     upload_button = inner_shadow_root.find_element(By.CSS_SELECTOR, "button")
-    file_input = inner_shadow_root.find_element(By.CSS_SELECTOR, "#file-input")
-    file_input.send_keys(x)
+    z = inner_shadow_root.find_element(By.CSS_SELECTOR, "#file-input")
+    z.send_keys(x)
      
     # access the download button and click it
     shadow_root_wrapper = WebDriverWait(driver, 10).until(
@@ -155,9 +160,43 @@ for x in file_paths:
     )
     shadow_root = shadow_root_wrapper.shadow_root
 
-    image_upload_area = WebDriverWait(shadow_root, 15).until(
+   # TimeoutException
+    try:
+        image_upload_area = WebDriverWait(shadow_root, 15).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-export"))
     )
+    except:
+        driver.refresh()
+        # Wait for the shadow root wrapper element to be present
+        shadow_root_wrapper = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
+        )
+
+        # Get the shadow root
+        shadow_root = shadow_root_wrapper.shadow_root
+
+        # Wait for the image upload area element to be visible within the shadow root
+        image_upload_area = WebDriverWait(shadow_root, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-upload"))
+        )
+
+        # Get the inner shadow root
+        inner_shadow_root = image_upload_area.shadow_root
+
+        # upload the image
+        upload_button = inner_shadow_root.find_element(By.CSS_SELECTOR, "button")
+        z = inner_shadow_root.find_element(By.CSS_SELECTOR, "#file-input")
+        z.send_keys(x)
+        
+        # access the download button and click it
+        shadow_root_wrapper = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "#quick-task-container > cclqt-remove-background"))
+        )
+        shadow_root = shadow_root_wrapper.shadow_root
+        image_upload_area = WebDriverWait(shadow_root, 15).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "sp-theme > cclqt-workspace > cclqt-image-export"))
+        )
+
 
     shadow_root_2 = image_upload_area.shadow_root
 
@@ -185,9 +224,8 @@ for x in file_paths:
     if delete_files_user_input == 'Y':
         os.remove(x)
     driver.back()
+
 driver.close()
-
-
 
 
 
