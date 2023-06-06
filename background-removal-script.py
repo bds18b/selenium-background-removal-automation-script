@@ -64,8 +64,8 @@ def upload_image(driver, x):
         EC.visibility_of_element_located((By.CSS_SELECTOR, "div"))
     )
     time.sleep(10)
-    x = end.find_elements(By.CSS_SELECTOR, "sp-button")
-    x[1].click()
+    buttons = end.find_elements(By.CSS_SELECTOR, "sp-button")
+    buttons[1].click()
 
                       
 # gets the paths of the images and stores in an array from a folder called 'images
@@ -75,7 +75,6 @@ for root, dirs, files in os.walk(input_path):
     for file in files:
         file_path = os.path.join(root, file)
         file_paths.append(file_path)
-print(file_paths)
 
 # User Input
 delete_files_user_input = input("Would you like the original images to be deleted after their background is removed? (Y/N): ")
